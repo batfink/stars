@@ -2073,7 +2073,7 @@ input.am-searchForm-input {
 }
 @font-face {
   font-family: 'glyphs';
-  src: url('../fonts/icon/glyphs.woff') format('woff'), url('../fonts/icon/glyphs.ttf') format('truetype');
+  src: url('./fonts/icon/glyphs.woff') format('woff'), url('../fonts/icon/glyphs.ttf') format('truetype');
   font-style: normal;
 }
 .am-icon:before,
@@ -6665,13 +6665,13 @@ table {
 }
 @font-face {
   font-family: 'gsb';
-  src: url('../fonts/guardian/sans/black.woff') format('woff'), url('../fonts/guardian/sans/black.ttf') format('truetype');
+  src: url('./fonts/guardian/sans/black.woff') format('woff'), url('../fonts/guardian/sans/black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
 }
 @font-face {
   font-family: 'gsb';
-  src: url('../fonts/guardian/sans/italic.woff') format('woff'), url('../fonts/guardian/sans/italic.ttf') format('truetype');
+  src: url('./fonts/guardian/sans/italic.woff') format('woff'), url('../fonts/guardian/sans/italic.ttf') format('truetype');
   font-weight: 900;
   font-style: italic;
 }
