@@ -1,0 +1,19 @@
+body {
+    background: black;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    height: 100vh;
+}
+
+amedia-xmas, amedia-xmas-svg, amedia-xmas-canvas {
+    /*background: orange;*/
+    width: 100%; height: 100%;
+    position: absolute;
+}

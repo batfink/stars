@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <link media="all" rel="stylesheet" type="text/css" href="design2.src.css">
+    <link media="all" rel="stylesheet" type="text/css" href="escenic.src.css">
+    <link media="all" rel="stylesheet" type="text/css" href="local.css">
+
+    <script src="document-register-element/build/document-register-element.js"></script>
+
+    <link rel="stylesheet" href="index.css">
+
+
+    <style>
+        .am-siteHeader2-branding {
+            position: relative;
+        }
+
+        .am-siteHeader2-branding-inner {
+            position: relative;
+            z-index: 2;
+        }
+
+        .star {
+            opacity: .3;
+            -webkit-animation: glitter 4s linear 0s infinite normal;
+                    animation: glitter 4s linear 0s infinite normal;
+        }
+
+        /*css3 keyframes for glittering effect*/
+        @keyframes glitter {
+            0%   {transform: scale(1.0); opacity: 1; }
+            25%  {transform: scale(0.5); opacity: .3; }
+            50%  {transform: scale(1.0); opacity: 1; }
+            75%  {transform: scale(0.5); opacity: .3; }
+            100% {transform: scale(1.0); opacity: 1;}
+        }
+        @-webkit-keyframes glitter {
+            0%   { -webkit-transform: scale(1.0); opacity: 1; }
+            25%  { -webkit-transform: scale(0.5); opacity: .3; }
+            50%  { -webkit-transform: scale(1.0); opacity: 1; }
+            75%  { -webkit-transform: scale(0.5); opacity: .3; }
+            100% { -webkit-transform: scale(1.0); opacity: 1; }
+        }
+    </style>
+
+
+    <script src="script.js"></script>
+
+</head>
+<body class="am-page am-page--fixed am-skin--page">
+
+
+
+    <div class="am-page-header">
+
+        <header class="am-siteHeader2 lp_header am-siteHeader2--negative">
+
+
+
+            <!-- LOGO + PROMO -->
+            <div class="am-siteHeader2-branding am-color--brandCombo">
+
+                <amedia-xmas star-color="white"></amedia-xmas>
+
+                <div class="am-siteHeader2-container">
+                    <div class="am-siteHeader2-branding-inner">
+                        <div class="am-siteHeader2-identity lp_logo">
+                            <a href="/">
+
+                                <!-- <img src="http://r.api.no/local/v3/publications/www.ba.no/gfx/small.svg" alt="BA"> -->
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+
+    </div>
+
+
+
+
+
+</body>
+</html>

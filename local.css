@@ -1,0 +1,143 @@
+#am-legacy .am-siteHeader--inverted .am-newspaper-color,
+#am-legacy .am-newspaper-color {
+background-color: #D62727;
+}
+
+.am-color--brandBG,
+#am-legacy .am-color--brandBG,
+.am-siteHeader--inverted .am-newspaper-color,
+.am-newspaper-color {
+background-color: #D62727;
+}
+
+.am-color--brand,
+#am-legacy .am-color--brand {
+color: #D62727;
+}
+
+.am-ribbon {
+    color: #fff;
+    background-color: #D62727;
+    display: block;
+}
+.am-ribbon-content:before {
+    content: "BA+";
+}
+
+.am-premium-logo {
+    background-image: url("http://r.api.no/local/v3/publications/www.ba.no/gfx/subscription/article_logo_99.png") !important;
+}
+
+
+header.am-minimalist a.am-logo {
+background-image: url("http://r.api.no/local/v3/publications/www.ba.no/gfx/small.svg");
+height: 32px;
+width: 100px;
+display: block;
+background-repeat: no-repeat;
+background-position: 0 50%;
+background-size: contain;
+}
+
+@media
+only screen and ( -webkit-min-device-pixel-ratio: 1.3 ),
+only screen and ( min-resolution: 124.8dpi ) {
+header.am-minimalist a.am-logo {
+background-image: url("http://r.api.no/local/v3/publications/www.ba.no/gfx/small.svg");
+height: 42px;
+width: 100px;
+display: block;
+background-repeat: no-repeat;
+background-position: 0 50%;
+background-size: contain;
+}
+}
+
+
+    .am-ribbon-content:after{
+      border-color: #ab1f1f transparent transparent transparent;
+    }
+
+
+.am-color--brandMonoInverted,
+#am-legacy .am-color--brandMonoInverted {
+    color: #fff;
+}
+
+.am-color--brandCombo,
+#am-legacy  .am-color--brandCombo {
+    background-color: #D62727;
+    color: #fff;
+}
+
+
+
+.am-skin--page,
+#am-legacy,
+#am-legacy .am-adContainer.am-skin--white,
+#am-legacy .am-page-content .apiPage,
+#am-legacy #apiStickyAd,
+#am-legacy #apiHangover {
+color: #222;
+background-color: #fff;
+}
+
+
+.am-skin--page .am-adTopBanner .apiTopAdContainerSpesial .am-adContainer:before {
+background-color: #fff;
+}
+
+
+
+
+.am-skin--customOne {
+background-color: #ffffff;
+color: #222;
+}
+
+.am-skin--customTwo {
+background-color: #ffffff;
+color: #222;
+}
+
+.am-page .am-tagHeader--debatt,
+.am-page.am-model-opinion .am-commentsTitle,
+.am-page.am-model-opinion .am-article-header,
+.am-page.am-model-opinion .am-tagHeader--debatt,
+.am-page.am-model-opinion .am-articleItem .am-articleEmbed-opinion {
+border-color: #e9d14f;
+}
+
+.am-commentInvite .am-btn--debatt,
+.am-commentInvite .am-btn--debatt:before,
+.am-page .am-tagHeader--debatt button,
+.am-page.am-model-opinion .am-factBox,
+.am-page .am-runningHead.am-runningHead--opinion,
+.am-page.am-model-opinion .am-page-content .am-quote,
+.am-page.am-model-opinion .am-article-body .am-factBox,
+.am-page.am-model-opinion .am-comments .response .responseCallToAction,
+.am-page.am-model-opinion .am-comments .response .responseCallToAction:hover {
+background-color: #e9d14f;
+color: #222;
+}
+
+.am-page .am-article-opinionType,
+.am-page .am-tagHeader--debatt .am-tagHeader--quoteBig,
+.am-model-opinion .am-articleTagList-item:first-child .am-articleTag,
+.am-page.am-model-opinion .am-articleTagList--prominent .am-articleTagList-item:first-child .am-articleTag {
+color: #e9d14f;
+}
+
+.am-tagHeader--folkeavis .am-tagHeader--quoteBig {
+color: #4d772d;
+}
+
+.am-tagHeader--folkeavis button {
+background-color: #4d772d;
+color: #fff;
+}
+
+.am-tagHeader--folkeavis {
+border-top: 5px solid #4d772d;
+border-bottom: 1px solid #4d772d;
+}
