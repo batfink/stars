@@ -63,127 +63,49 @@
     var log = console.log.bind(console);
     var err = console.error.bind(console);
 
-    var limit = 25;
-    var canvas = tag('canvas');
-    var ctx = canvas.getContext('2d');
-    var stars = [];
-    ctx.globalCompositeOperation = 'destination-over';
-    var starColour = '#fff';
-    var ratio = undefined;
+    function random (min, max) {
+        min = min * 100;
+        max = max * 100;
+        return (Math.random() * (max - min + 1) + min) / 100;
+    }
 
-    var pulseDir = 1;
-
-    var minScale = 0.6;
-    var starScale = 0.8;
+    var rotation = Math.PI / 2 * 3;
+    var minScale = 0.3;
     var maxScale = 1;
     var step = 0.012;
 
-    var fps = 30;
-    var fpsInterval = undefined;
-    var startTime = undefined;
-    var now = undefined;
-    var then = undefined;
-    var elapsed = undefined;
-    var _HTMLElement = function _HTMLElement() {};
-    _HTMLElement.prototype = HTMLElement.prototype;
+    var Star = (function () {
+        function Star(context, col, position) {
+            babelHelpers.classCallCheck(this, Star);
 
-    var AmediaXmas = (function (_HTMLElement2) {
-        babelHelpers.inherits(AmediaXmas, _HTMLElement2);
-
-        function AmediaXmas() {
-            babelHelpers.classCallCheck(this, AmediaXmas);
-            return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AmediaXmas).apply(this, arguments));
+            this.x = position.x;
+            this.y = position.y;
+            this.ctx = context;
+            this.color = col;
+            this.pulseDir = 1;
+            this.starScale = this.random(minScale, maxScale);
+            this.draw(this.starScale);
         }
 
-        babelHelpers.createClass(AmediaXmas, [{
-            key: 'rand',
-            value: function rand(mult) {
-                return Math.random() * mult;
+        babelHelpers.createClass(Star, [{
+            key: 'random',
+            value: function random(min, max) {
+                min = min * 100;
+                max = max * 100;
+                return (Math.random() * (max - min + 1) + min) / 100;
             }
         }, {
-            key: 'randomInt',
-            value: function randomInt(a, b) {
-                return Math.floor(Math.random() * (b - a + 1) + a);
+            key: 'reDraw',
+            value: function reDraw() {
+                this.draw(this.pulsate());
             }
         }, {
-            key: 'pulsate',
-            value: function pulsate() {
-                if (pulseDir === 1) {
-                    starScale -= step;
-                    if (starScale < minScale) {
-                        pulseDir = -1;
-                    }
-                } else {
-                    starScale += step;
-                    if (starScale > maxScale) {
-                        pulseDir = 1;
-                    }
-                }
-                return starScale;
-            }
-        }, {
-            key: 'starPulse',
-            value: function starPulse(outerRadius) {
-
-                return {
-                    outerRadius: 10,
-                    midRadius: 8,
-                    innerRadius: 6
-                };
-            }
-        }, {
-            key: 'startAnimating',
-            value: function startAnimating() {
-                fpsInterval = 1000 / fps;
-                then = window.performance.now();
-                startTime = then;
-                // console.log(startTime);
-                this.animate();
-            }
-        }, {
-            key: 'animate',
-            value: function animate(newtime) {
-
-                // request another frame
-
-                var cb = this.animate.bind(this);
-                requestAnimationFrame(cb);
-
-                // calc elapsed time since last loop
-
-                now = newtime;
-                elapsed = now - then;
-
-                // if enough time has elapsed, draw the next frame
-
-                if (elapsed > fpsInterval) {
-
-                    // Get ready for next frame by setting then=now, but...
-                    // Also, adjust for fpsInterval not being multiple of 16.67
-                    then = now - elapsed % fpsInterval;
-
-                    var scale = this.pulsate();
-
-                    // log('animating here', scale);
-
-                    canvas.width = canvas.width;
-
-                    // ctx.fillStyle = 'red';
-                    // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    ctx.scale(ratio, ratio);
-
-                    var i = limit;
-
-                    while (i > 0) {
-                        i--;
-                        this.drawStar(stars[i], scale);
-                    }
-                }
-            }
-        }, {
-            key: 'drawStar',
-            value: function drawStar(star, scale) {
+            key: 'draw',
+            value: function draw(scale) {
+                var xPosition = this.x;
+                var yPosition = this.y;
+                var ctx = this.ctx;
+                var color = this.color;
 
                 var spikes = 8;
 
@@ -191,10 +113,8 @@
                     innerRadius = 2 * scale,
                     mediumRadius = 6 * scale;
 
-                var cx = star.x,
-                    cy = star.y;
-
-                var rotation = Math.PI / 2 * 3;
+                var cx = xPosition,
+                    cy = yPosition;
 
                 var x = cx,
                     y = cy;
@@ -202,8 +122,7 @@
                 var step = Math.PI / spikes;
 
                 ctx.globalAlpha = scale;
-                // ctx.strokeStyle = 'white';
-                ctx.fillStyle = starColour;
+                ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.moveTo(cx, cy - outerRadius);
 
@@ -230,10 +149,96 @@
                 }
 
                 ctx.lineTo(cx, cy - outerRadius);
-                // ctx.stroke();
                 ctx.fill();
                 ctx.closePath();
-                ctx.restore();
+                ctx.globalAlpha = 1;
+            }
+        }, {
+            key: 'pulsate',
+            value: function pulsate() {
+                if (this.pulseDir === 1) {
+                    this.starScale -= step;
+                    if (this.starScale < minScale) {
+                        this.pulseDir = -1;
+                    }
+                } else {
+                    this.starScale += step;
+                    if (this.starScale > maxScale) {
+                        this.pulseDir = 1;
+                    }
+                }
+                return this.starScale;
+            }
+        }]);
+        return Star;
+    })();
+
+    var limit = 25;
+    var canvas = tag('canvas');
+    var ctx = canvas.getContext('2d');
+    var stars = [];
+    var color = '#fff';
+    var ratio = undefined;
+    var fps = 30;
+    var fpsInterval = undefined;
+    var startTime = undefined;
+    var now = undefined;
+    var then = undefined;
+    var elapsed = undefined;
+    var _HTMLElement = function _HTMLElement() {};
+    _HTMLElement.prototype = HTMLElement.prototype;
+
+    var AmediaXmas = (function (_HTMLElement2) {
+        babelHelpers.inherits(AmediaXmas, _HTMLElement2);
+
+        function AmediaXmas() {
+            babelHelpers.classCallCheck(this, AmediaXmas);
+            return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(AmediaXmas).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(AmediaXmas, [{
+            key: 'startAnimating',
+            value: function startAnimating() {
+                fpsInterval = 1000 / fps;
+                then = window.performance.now();
+                startTime = then;
+                this.animate();
+            }
+        }, {
+            key: 'animate',
+            value: function animate(newtime) {
+
+                // request another frame
+
+                var cb = this.animate.bind(this);
+                requestAnimationFrame(cb);
+
+                // calc elapsed time since last loop
+
+                now = newtime;
+                elapsed = now - then;
+
+                // if enough time has elapsed, draw the next frame
+
+                if (elapsed > fpsInterval) {
+
+                    // Get ready for next frame by setting then=now, but...
+                    // Also, adjust for fpsInterval not being multiple of 16.67
+                    then = now - elapsed % fpsInterval;
+
+                    canvas.width = canvas.width;
+
+                    // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.scale(ratio, ratio);
+
+                    var i = limit;
+
+                    while (i > 0) {
+                        i--;
+                        stars[i].reDraw();
+                    }
+                }
             }
         }, {
             key: 'createdCallback',
@@ -245,16 +250,7 @@
                 // use devicePixelRatio for hidpi devices
                 ratio = window.devicePixelRatio || 1;
 
-                var i = limit;
-                while (i > 0) {
-                    stars.push({
-                        x: this.width * this.rand(1),
-                        y: this.height * this.rand(1)
-                    });
-                    i--;
-                }
-
-                starColour = this.getAttribute('star-color');
+                color = this.getAttribute('star-color');
 
                 // increase canvas size for hidpi devices
                 canvas.width = this.width * ratio;
@@ -264,15 +260,21 @@
                 canvas.style.width = this.width + 'px';
                 canvas.style.height = this.height + 'px';
 
+                ctx.scale(ratio, ratio);
+
                 this.appendChild(canvas);
 
-                // this.draw();
+                var i = limit;
+
+                while (i > 0) {
+                    i--;
+                    stars.push(new Star(ctx, color, {
+                        x: random(0, this.width),
+                        y: random(0, this.height)
+                    }));
+                }
 
                 this.startAnimating();
-
-                // window.requestAnimationFrame(this.draw.bind(this, canvas));
-
-                // setInterval(this.draw.bind(this), 1000/fps).bind(this);
             }
         }]);
         return AmediaXmas;
