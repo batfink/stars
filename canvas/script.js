@@ -72,29 +72,89 @@
     var rotation = Math.PI / 2 * 3;
     var minScale = 0.3;
     var maxScale = 1;
-    var step = 0.012;
+    var increment = 0.02;
+    var spikes = 8;
+    var step = Math.PI / spikes;
+
+    var star = undefined;
+    var starSize = 21;
+
+    function drawStar(color, ratio) {
+        var canvas = document.createElement('canvas');
+        canvas.width = starSize * ratio;
+        canvas.height = starSize * ratio;
+
+        var ctx = canvas.getContext('2d');
+        ctx.scale(ratio, ratio);
+
+        var outerRadius = starSize / 2,
+            innerRadius = starSize / (starSize / 2),
+            mediumRadius = starSize / 3 - 1;
+
+        var cx = starSize / 2,
+            cy = starSize / 2;
+
+        var x = cx,
+            y = cy;
+
+        // ctx.globalAlpha = scale;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - outerRadius);
+
+        var count = spikes;
+
+        while (count > 0) {
+            x = cx + Math.cos(rotation) * outerRadius;
+            y = cy + Math.sin(rotation) * outerRadius;
+            ctx.lineTo(x, y);
+            rotation += step;
+
+            x = cx + Math.cos(rotation) * innerRadius;
+            y = cy + Math.sin(rotation) * innerRadius;
+            ctx.lineTo(x, y);
+            rotation += step;
+
+            x = cx + Math.cos(rotation) * mediumRadius;
+            y = cy + Math.sin(rotation) * mediumRadius;
+            ctx.lineTo(x, y);
+            rotation += step;
+
+            x = cx + Math.cos(rotation) * innerRadius;
+            y = cy + Math.sin(rotation) * innerRadius;
+            ctx.lineTo(x, y);
+            rotation += step;
+
+            count--;
+        }
+
+        ctx.lineTo(cx, cy - outerRadius);
+        ctx.fill();
+        ctx.closePath();
+        return canvas;
+        // ctx.globalAlpha = 1;
+    }
 
     var Star = (function () {
-        function Star(context, col, position) {
+        function Star(context, color, ratio, position) {
             babelHelpers.classCallCheck(this, Star);
 
             this.x = position.x;
             this.y = position.y;
             this.ctx = context;
-            this.color = col;
+            this.color = color;
             this.pulseDir = 1;
-            this.starScale = this.random(minScale, maxScale);
+            this.starScale = random(minScale, maxScale);
+            this.ratio = ratio;
+
+            if (star === undefined) {
+                star = drawStar(color, ratio);
+            }
+
             this.draw(this.starScale);
         }
 
         babelHelpers.createClass(Star, [{
-            key: 'random',
-            value: function random(min, max) {
-                min = min * 100;
-                max = max * 100;
-                return (Math.random() * (max - min + 1) + min) / 100;
-            }
-        }, {
             key: 'reDraw',
             value: function reDraw() {
                 this.draw(this.pulsate());
@@ -102,67 +162,26 @@
         }, {
             key: 'draw',
             value: function draw(scale) {
-                var xPosition = this.x;
-                var yPosition = this.y;
+
                 var ctx = this.ctx;
-                var color = this.color;
-
-                var spikes = 8;
-
-                var outerRadius = 10.5 * scale,
-                    innerRadius = 2 * scale,
-                    mediumRadius = 6 * scale;
-
-                var cx = xPosition,
-                    cy = yPosition;
-
-                var x = cx,
-                    y = cy;
-
-                var step = Math.PI / spikes;
-
                 ctx.globalAlpha = scale;
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - outerRadius);
+                ctx.setTransform(this.ratio, 0, 0, this.ratio, 0, 0);
+                ctx.translate(this.x, this.y);
 
-                for (var i = 0; i < spikes; i++) {
-                    x = cx + Math.cos(rotation) * outerRadius;
-                    y = cy + Math.sin(rotation) * outerRadius;
-                    ctx.lineTo(x, y);
-                    rotation += step;
-
-                    x = cx + Math.cos(rotation) * innerRadius;
-                    y = cy + Math.sin(rotation) * innerRadius;
-                    ctx.lineTo(x, y);
-                    rotation += step;
-
-                    x = cx + Math.cos(rotation) * mediumRadius;
-                    y = cy + Math.sin(rotation) * mediumRadius;
-                    ctx.lineTo(x, y);
-                    rotation += step;
-
-                    x = cx + Math.cos(rotation) * innerRadius;
-                    y = cy + Math.sin(rotation) * innerRadius;
-                    ctx.lineTo(x, y);
-                    rotation += step;
-                }
-
-                ctx.lineTo(cx, cy - outerRadius);
-                ctx.fill();
-                ctx.closePath();
+                var size = starSize * scale;
+                ctx.drawImage(star, -(size / 2), -(size / 2), size, size);
                 ctx.globalAlpha = 1;
             }
         }, {
             key: 'pulsate',
             value: function pulsate() {
                 if (this.pulseDir === 1) {
-                    this.starScale -= step;
+                    this.starScale -= increment;
                     if (this.starScale < minScale) {
                         this.pulseDir = -1;
                     }
                 } else {
-                    this.starScale += step;
+                    this.starScale += increment;
                     if (this.starScale > maxScale) {
                         this.pulseDir = 1;
                     }
@@ -268,7 +287,7 @@
 
                 while (i > 0) {
                     i--;
-                    stars.push(new Star(ctx, color, {
+                    stars.push(new Star(ctx, color, ratio, {
                         x: random(0, this.width),
                         y: random(0, this.height)
                     }));
