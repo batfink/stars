@@ -88,7 +88,7 @@ class AmediaXmas extends _HTMLElement {
 
         while(i > 0) {
             i--;
-            stars.push(new Star(ctx, color, {
+            stars.push(new Star(ctx, color, ratio, {
                     x: random(0, this.width),
                     y: random(0, this.height),
                 }));
