@@ -69,14 +69,14 @@
         return (Math.random() * (max - min + 1) + min) / 100;
     }
 
-    var rotation = Math.PI / 2 * 3;
     var minScale = 0.3;
     var maxScale = 1;
     var increment = 0.015;
     var spikes = 8;
     var step = Math.PI / spikes;
-    var star = undefined;
     var starSize = 21;
+    var star = undefined;
+    var rotation = Math.PI / 2 * 3;
 
     function drawStar(color, ratio) {
         var canvas = document.createElement('canvas');
@@ -133,11 +133,21 @@
     }
 
     var Star = (function () {
-        function Star(context, color, ratio, position) {
+        babelHelpers.createClass(Star, [{
+            key: 'position',
+            set: function set(xy) {
+                this.x = xy[0];
+                this.y = xy[1];
+            },
+            get: function get() {
+                return [this.x, this.y];
+            }
+        }]);
+
+        function Star(context, color, ratio, xy) {
             babelHelpers.classCallCheck(this, Star);
 
-            this.x = position.x;
-            this.y = position.y;
+            this.position = xy;
             this.ctx = context;
             this.color = color;
             this.pulseDir = 1;
@@ -156,12 +166,12 @@
             value: function reDraw() {
                 this.draw(this.pulsate());
             }
-        }, {
-            key: 'rePosition',
-            value: function rePosition(position) {
-                this.x = position.x;
-                this.y = position.y;
-            }
+
+            // rePosition(position) {
+            //     this.x = position.x;
+            //     this.y = position.y;
+            // }
+
         }, {
             key: 'draw',
             value: function draw(scale) {
@@ -201,6 +211,7 @@
     var stars = [];
     var color = '#fff';
     var ratio = undefined;
+    var running = false;
 
     var _HTMLElement = function _HTMLElement() {};
     _HTMLElement.prototype = HTMLElement.prototype;
@@ -214,6 +225,52 @@
         }
 
         babelHelpers.createClass(AmediaXmas, [{
+            key: 'updateStarPositions',
+            value: function updateStarPositions() {
+
+                var oldWidth = this.width;
+                var oldHeight = this.height;
+
+                // reflow
+                var newWidth = this.offsetWidth;
+                var newHeight = this.offsetHeight;
+
+                this.width = newWidth;
+                this.height = newHeight;
+
+                // increase canvas size for hidpi devices
+                // repaint
+                canvas.width = this.width * ratio;
+                canvas.height = this.height * ratio;
+
+                // scale canvas to original size with css
+                // repaint
+                canvas.style.width = this.width + 'px';
+                canvas.style.height = this.height + 'px';
+
+                var i = limit;
+                while (i > 0) {
+                    i--;
+                    var oldPosition = stars[i].position;
+                    var newPosition = [oldPosition[0] / oldWidth * newWidth, oldPosition[1] / oldHeight * newHeight];
+                    stars[i].position = newPosition;
+                }
+
+                running = false;
+            }
+        }, {
+            key: 'resize',
+            value: function resize() {
+                if (!running) {
+                    running = true;
+                    if (window.requestAnimationFrame) {
+                        requestAnimationFrame(this.updateStarPositions.bind(this));
+                    } else {
+                        setTimeout(this.updateStarPositions.bind(this), 66);
+                    }
+                }
+            }
+        }, {
             key: 'animate',
             value: function animate() {
 
@@ -259,13 +316,12 @@
 
                 while (i > 0) {
                     i--;
-                    stars.push(new Star(ctx, color, ratio, {
-                        x: random(0, this.width),
-                        y: random(0, this.height)
-                    }));
+                    stars.push(new Star(ctx, color, ratio, [random(0, this.width), random(0, this.height)]));
                 }
 
                 this.animate();
+
+                window.addEventListener('resize', this.resize.bind(this));
             }
         }]);
         return AmediaXmas;
