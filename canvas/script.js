@@ -55,7 +55,13 @@
     };
 
     babelHelpers;
-    var tag = document.createElement.bind(document);
+    function random (min, max) {
+        min = min * 100;
+        max = max * 100;
+        return (Math.random() * (max - min + 1) + min) / 100;
+    }
+
+    var tag$1 = document.createElement.bind(document);
     var svgtag = document.createElementNS.bind(document, 'http://www.w3.org/2000/svg');
     var txt = document.createTextNode.bind(document);
     var get = document.querySelector.bind(document);
@@ -63,19 +69,12 @@
     var log = console.log.bind(console);
     var err = console.error.bind(console);
 
-    function random (min, max) {
-        min = min * 100;
-        max = max * 100;
-        return (Math.random() * (max - min + 1) + min) / 100;
-    }
-
     var rotation = Math.PI / 2 * 3;
     var minScale = 0.3;
     var maxScale = 1;
-    var increment = 0.02;
+    var increment = 0.015;
     var spikes = 8;
     var step = Math.PI / spikes;
-
     var star = undefined;
     var starSize = 21;
 
@@ -97,7 +96,6 @@
         var x = cx,
             y = cy;
 
-        // ctx.globalAlpha = scale;
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.moveTo(cx, cy - outerRadius);
@@ -132,7 +130,6 @@
         ctx.fill();
         ctx.closePath();
         return canvas;
-        // ctx.globalAlpha = 1;
     }
 
     var Star = (function () {
@@ -158,6 +155,12 @@
             key: 'reDraw',
             value: function reDraw() {
                 this.draw(this.pulsate());
+            }
+        }, {
+            key: 'rePosition',
+            value: function rePosition(position) {
+                this.x = position.x;
+                this.y = position.y;
             }
         }, {
             key: 'draw',
@@ -198,12 +201,7 @@
     var stars = [];
     var color = '#fff';
     var ratio = undefined;
-    var fps = 30;
-    var fpsInterval = undefined;
-    var startTime = undefined;
-    var now = undefined;
-    var then = undefined;
-    var elapsed = undefined;
+
     var _HTMLElement = function _HTMLElement() {};
     _HTMLElement.prototype = HTMLElement.prototype;
 
@@ -216,47 +214,20 @@
         }
 
         babelHelpers.createClass(AmediaXmas, [{
-            key: 'startAnimating',
-            value: function startAnimating() {
-                fpsInterval = 1000 / fps;
-                then = window.performance.now();
-                startTime = then;
-                this.animate();
-            }
-        }, {
             key: 'animate',
-            value: function animate(newtime) {
+            value: function animate() {
 
-                // request another frame
-
+                // request next frame
                 var cb = this.animate.bind(this);
                 requestAnimationFrame(cb);
 
-                // calc elapsed time since last loop
+                // clear canvas
+                canvas.width = canvas.width;
 
-                now = newtime;
-                elapsed = now - then;
-
-                // if enough time has elapsed, draw the next frame
-
-                if (elapsed > fpsInterval) {
-
-                    // Get ready for next frame by setting then=now, but...
-                    // Also, adjust for fpsInterval not being multiple of 16.67
-                    then = now - elapsed % fpsInterval;
-
-                    canvas.width = canvas.width;
-
-                    // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    ctx.scale(ratio, ratio);
-
-                    var i = limit;
-
-                    while (i > 0) {
-                        i--;
-                        stars[i].reDraw();
-                    }
+                var i = limit;
+                while (i > 0) {
+                    i--;
+                    stars[i].reDraw();
                 }
             }
         }, {
@@ -275,10 +246,11 @@
                 canvas.width = this.width * ratio;
                 canvas.height = this.height * ratio;
 
-                // scale canvas down to original size with css
+                // scale canvas to original size with css
                 canvas.style.width = this.width + 'px';
                 canvas.style.height = this.height + 'px';
 
+                // increase context size for hidpi devices
                 ctx.scale(ratio, ratio);
 
                 this.appendChild(canvas);
@@ -293,7 +265,7 @@
                     }));
                 }
 
-                this.startAnimating();
+                this.animate();
             }
         }]);
         return AmediaXmas;
