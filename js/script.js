@@ -5,7 +5,7 @@ let stars = [];
 let color = '#fff'
 let ratio;
 
-import { log } from '../lib/bondage.js';
+import { log, tag } from '../lib/bondage.js';
 import Star from './star.js';
 import random from '../lib/random.js';
 
