@@ -55,19 +55,19 @@
     };
 
     babelHelpers;
-    function random (min, max) {
-        min = min * 100;
-        max = max * 100;
-        return (Math.random() * (max - min + 1) + min) / 100;
-    }
-
-    var tag$1 = document.createElement.bind(document);
+    var tag = document.createElement.bind(document);
     var svgtag = document.createElementNS.bind(document, 'http://www.w3.org/2000/svg');
     var txt = document.createTextNode.bind(document);
     var get = document.querySelector.bind(document);
     var getall = document.querySelectorAll.bind(document);
     var log = console.log.bind(console);
     var err = console.error.bind(console);
+
+    function random (min, max) {
+        min = min * 100;
+        max = max * 100;
+        return (Math.random() * (max - min + 1) + min) / 100;
+    }
 
     var rotation = Math.PI / 2 * 3;
     var minScale = 0.3;
