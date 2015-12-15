@@ -1,11 +1,11 @@
-let rotation = Math.PI/2*3;
-let minScale = 0.3;
-let maxScale = 1;
-let increment = 0.015;
-let spikes = 8;
-let step = Math.PI/spikes;
+const minScale = 0.3;
+const maxScale = 1;
+const increment = 0.015;
+const spikes = 8;
+const step = Math.PI/spikes;
+const starSize = 21;
 let star;
-let starSize = 21;
+let rotation = Math.PI/2*3;
 
 import { log } from '../lib/bondage.js';
 import random from '../lib/random.js';
@@ -66,9 +66,17 @@ function drawStar(color, ratio) {
 
 export default class Star {
 
-    constructor(context, color, ratio, position) {
-        this.x = position.x;
-        this.y = position.y;
+    set position(xy) {
+        this.x = xy[0];
+        this.y = xy[1];
+    }
+
+    get position() {
+        return [ this.x, this.y ];
+    }
+
+    constructor(context, color, ratio, xy) {
+        this.position = xy;
         this.ctx = context;
         this.color = color;
         this.pulseDir = 1;
@@ -86,10 +94,10 @@ export default class Star {
         this.draw(this.pulsate());
     }
 
-    rePosition(position) {
-        this.x = position.x;
-        this.y = position.y;
-    }
+    // rePosition(position) {
+    //     this.x = position.x;
+    //     this.y = position.y;
+    // }
 
     draw(scale) {
 
